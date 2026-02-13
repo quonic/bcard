@@ -1,0 +1,11 @@
+{
+    "name": "John Doe",
+    "email": "john.doe@example.com",
+    "phone": "+1-555-123-4567",
+    "company": "Example Corp",
+    "title": "Software Engineer",
+    "website": "https://www.johndoe.com.example",
+    "linkedin": "https://www.linkedin.com/",
+    "github": "https://github.com/",
+    "twitter": "https://twitter.com/"
+}
