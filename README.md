@@ -1,4 +1,4 @@
-# Business Card Website Generator
+# Contact Card Website Generator
 
 A Python-based static website generator that creates a beautiful, modern business contact card HTML page from a JSON file with an embedded vCard QR code.
 
@@ -23,12 +23,12 @@ A Python-based static website generator that creates a beautiful, modern busines
 ## Project Structure
 
 ```
-business-card/
+bcard/
 ├── generate.py              # Main generator script
 ├── requirements.txt         # Python dependencies
 ├── README.md               # This file
 ├── input/
-│   └── *.json              # One or more business card inputs
+│   └── *.json              # One or more contact card inputs
 ├── output/
 │   └── *.html              # Generated contact cards (output)
 └── templates/
@@ -50,7 +50,7 @@ Requires:
 - `Pillow` - Image processing
 - `Jinja2` - Template rendering
 
-### 2. Configure Your Business Card
+### 2. Configure Your Contact Card
 
 Create one or more JSON files in `input/` with your details:
 
