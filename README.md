@@ -32,7 +32,8 @@ bcard/
 ├── output/
 │   └── *.html              # Generated contact cards (output)
 └── templates/
-    └── card.html           # HTML template
+    ├── card.html           # HTML template
+    └── styles.css          # CSS stylesheet
 ```
 
 ## Setup
@@ -153,12 +154,14 @@ The QR code includes all your contact fields and is generated at ~200x200px, pro
 
 ### Styling
 
-To customize the appearance, edit `templates/card.html` and modify the CSS in the `<style>` section:
+To customize the appearance, edit `templates/styles.css`:
 
 - **Colors**: Look for `#667eea` (primary) and `#764ba2` (secondary)
-- **Fonts**: Modify the `font-family` property
+- **Fonts**: Modify the `font-family` property in the `body` rule
 - **Layout**: Adjust padding, margins, and flex properties
-- **Gradients**: Change the `linear-gradient` values
+- **Gradients**: Change the `linear-gradient` values in `body` and `.header`
+
+The CSS is automatically included in the generated HTML files.
 
 ### Template Structure
 
