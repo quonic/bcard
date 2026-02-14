@@ -6,6 +6,7 @@ Generates a static HTML contact card from a JSON business card file with an embe
 
 import json
 import base64
+import re
 import sys
 from pathlib import Path
 from io import BytesIO
@@ -143,40 +144,83 @@ def render_template(template_path, output_path, card_data, qr_code_uri):
         f.write(html_content)
 
 
+def slugify_name(value):
+    """Normalize a string for use as a filename."""
+    if not value:
+        return ""
+    text = str(value).lower()
+    text = re.sub(r"[^a-z0-9 _]+", "", text)
+    text = text.replace(" ", "_")
+    text = re.sub(r"_+", "_", text).strip("_")
+    return text
+
+
+def choose_output_path(output_dir, base_name):
+    """Choose a non-colliding output path using numeric suffixes."""
+    output_path = output_dir / f"{base_name}.html"
+    if not output_path.exists():
+        return output_path
+
+    index = 2
+    while True:
+        candidate = output_dir / f"{base_name}-{index}.html"
+        if not candidate.exists():
+            return candidate
+        index += 1
+
+
 def main():
     """Main entry point."""
     # Define paths
     project_root = Path(__file__).parent
-    json_path = project_root / "input" / "business-card.json"
+    input_dir = project_root / "input"
     template_path = project_root / "templates" / "card.html"
-    output_path = project_root / "output" / "index.html"
+    output_dir = project_root / "output"
 
     print("🎴 Business Card Generator")
     print("-" * 50)
 
-    # Load data
-    print(f"📖 Loading business card data from: {json_path}")
-    card_data = load_business_card(json_path)
-    print(f"   ✓ Loaded card for: {card_data.get('name', 'Unknown')}")
+    json_paths = sorted(input_dir.glob("*.json"))
+    if not json_paths:
+        print(f"Error: No JSON files found in {input_dir}")
+        sys.exit(1)
 
-    # Generate vCard
-    print("📝 Generating vCard format...")
-    vcard = generate_vcard(card_data)
-    print("   ✓ vCard generated")
+    output_dir.mkdir(parents=True, exist_ok=True)
 
-    # Generate QR code
-    print("📊 Generating QR code...")
-    qr_code_uri = generate_qr_code(vcard)
-    print("   ✓ QR code created (embedded as data URI)")
+    print(f"📦 Found {len(json_paths)} JSON file(s) in: {input_dir}")
 
-    # Render template
-    print(f"🎨 Rendering HTML template...")
-    render_template(template_path, output_path, card_data, qr_code_uri)
-    print(f"   ✓ Template rendered")
+    for json_path in json_paths:
+        print("-" * 50)
+        print(f"📖 Loading business card data from: {json_path}")
+        card_data = load_business_card(json_path)
+        print(f"   ✓ Loaded card for: {card_data.get('name', 'Unknown')}")
+
+        base_name = slugify_name(card_data.get('name', ''))
+        if not base_name:
+            base_name = slugify_name(json_path.stem)
+        if not base_name:
+            base_name = "card"
+
+        output_path = choose_output_path(output_dir, base_name)
+
+        # Generate vCard
+        print("📝 Generating vCard format...")
+        vcard = generate_vcard(card_data)
+        print("   ✓ vCard generated")
+
+        # Generate QR code
+        print("📊 Generating QR code...")
+        qr_code_uri = generate_qr_code(vcard)
+        print("   ✓ QR code created (embedded as data URI)")
+
+        # Render template
+        print("🎨 Rendering HTML template...")
+        render_template(template_path, output_path, card_data, qr_code_uri)
+        print("   ✓ Template rendered")
+        print(f"✅ Success! Website generated at: {output_path}")
 
     print("-" * 50)
-    print(f"✅ Success! Website generated at: {output_path}")
-    print(f"   Open {output_path} in a web browser to view your contact card.")
+    print("✅ Done! Open the generated HTML file(s) in a web browser.")
 
 
 if __name__ == "__main__":

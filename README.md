@@ -10,7 +10,7 @@ A Python-based static website generator that creates a beautiful, modern busines
 
 **vCard QR Code** - Scan with any phone to add contact to address book
 
-**Embedded Assets** - Single self-contained HTML file (no external images needed)
+**Embedded Assets** - Self-contained HTML files (no external images needed)
 
 **Fast Generation** - Generates HTML in milliseconds
 
@@ -28,9 +28,9 @@ business-card/
 ├── requirements.txt         # Python dependencies
 ├── README.md               # This file
 ├── input/
-│   └── business-card.json  # Your business card data (input)
+│   └── *.json              # One or more business card inputs
 ├── output/
-│   └── index.html          # Generated contact card (output)
+│   └── *.html              # Generated contact cards (output)
 └── templates/
     └── card.html           # HTML template
 ```
@@ -44,6 +44,7 @@ pip install -r requirements.txt
 ```
 
 Requires:
+
 - Python 3.6+
 - `qrcode` - QR code generation
 - `Pillow` - Image processing
@@ -51,7 +52,7 @@ Requires:
 
 ### 2. Configure Your Business Card
 
-Edit `input/business-card.json` with your details:
+Create one or more JSON files in `input/` with your details:
 
 ```json
 {
@@ -68,9 +69,11 @@ Edit `input/business-card.json` with your details:
 ```
 
 **Required fields:**
+
 - `name` - Your full name
 
 **Optional fields:**
+
 - `email` - Email address
 - `phone` - Phone number (any format)
 - `company` - Company/Organization name
@@ -82,24 +85,37 @@ Edit `input/business-card.json` with your details:
 
 ## Usage
 
-### Generate Your Contact Card
+### Generate Your Contact Cards
 
 ```bash
 python generate.py
 ```
 
 This will:
-1. Read your business card from `input/business-card.json`
+
+1. Read all JSON files from `input/`
 2. Generate a vCard (standard contact format)
 3. Create a QR code that encodes the vCard
 4. Render the HTML template with all your information
-5. Output the final contact card to `output/index.html`
+5. Output a contact card per input file to `output/*.html`
+
+### Output Naming
+
+Each output filename is derived from the card `name` field using these rules:
+
+- Lowercase all characters
+- Remove special characters
+- Convert spaces to underscores
+
+If `name` is missing or empty, the input filename (without extension) is used instead.
+If a filename already exists, a numeric suffix is appended (for example: `jane_doe-2.html`).
 
 ### View Your Contact Card
 
-Open the generated `output/index.html` in any web browser. 
+Open any generated `output/*.html` file in a web browser.
 
 **Features you can interact with:**
+
 - Click the "ℹ️ What is this?" button to learn about the QR code
 - Hover over contact info to see interaction options
 - Scan the QR code with any phone camera to add yourself as a contact
@@ -110,7 +126,7 @@ Open the generated `output/index.html` in any web browser.
 ### Field Reference
 
 | Field | Type | Required | Example |
-|-------|------|----------|---------|
+| --- | --- | --- | --- |
 | `name` | string | Yes | "John Doe" |
 | `email` | string | No | "john@example.com" |
 | `phone` | string | No | "+1-555-0123" |
@@ -126,6 +142,7 @@ Open the generated `output/index.html` in any web browser.
 The generated QR code encodes your contact information in **vCard 3.0 format**, the standard used by smartphones for contact management.
 
 **When someone scans the QR with their phone camera:**
+
 - iOS: Prompts to add contact to Contacts app
 - Android: Can import to Contacts app directly
 - Other devices: Opens compatible contact import applications
@@ -146,6 +163,7 @@ To customize the appearance, edit `templates/card.html` and modify the CSS in th
 ### Template Structure
 
 The template uses **Jinja2** syntax. Variables you can use:
+
 - `{{ name }}` - Contact name
 - `{{ title }}` - Job title
 - `{{ company }}` - Company name
@@ -159,13 +177,15 @@ The template uses **Jinja2** syntax. Variables you can use:
 
 ## Output
 
-The generated `output/index.html` is a **completely self-contained** file:
+Each generated `output/*.html` file is **completely self-contained**:
+
 - All CSS is inline (no external stylesheets)
 - QR code is embedded as a base64 data URI (no external image files)
 - No external JavaScript libraries required
 - Works offline - no internet connection needed after generation
 
 This makes it perfect for:
+
 - Emailing the HTML file directly
 - Sharing via file transfer
 - Hosting on any web server
@@ -174,16 +194,21 @@ This makes it perfect for:
 ## Troubleshooting
 
 ### Error: "Required packages not found"
+
 **Solution:** Install dependencies with `pip install -r requirements.txt`
 
 ### Error: "JSON file not found"
+
 **Solution:** Make sure `input/business-card.json` exists and is in the correct location
 
 ### Error: "Invalid JSON"
+
 **Solution:** Validate your JSON file - use a JSON validator or open it in a text editor to check for syntax errors
 
 ### QR code doesn't scan
-**Solution:** 
+
+**Solution:**
+
 - Make sure contact data isn't too complex (keep it simple)
 - Try scanning with different QR code reader apps
 - The QR code is displayed on the HTML page - try taking a screenshot and scanning that
@@ -199,6 +224,7 @@ This project is open source and available for personal and commercial use.
 ## Support
 
 For issues or questions, check that:
+
 1. Python 3.6+ is installed: `python --version`
 2. All dependencies are installed: `pip install -r requirements.txt`
 3. JSON file syntax is valid: use a JSON validator
