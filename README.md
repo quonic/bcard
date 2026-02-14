@@ -1,6 +1,6 @@
-# Contact Card Website Generator
+# Contact Card Static Page Generator
 
-A Python-based static website generator that creates a beautiful, modern business contact card HTML page from a JSON file with an embedded vCard QR code.
+A Python-based static website generator that creates a beautiful, modern contact card HTML page from a JSON file with an embedded vCard QR code.
 
 ## Features
 
